@@ -13,7 +13,9 @@ pub trait Employee {
         Self: Sized;
 
     fn name(&self) -> &str;
+
     fn enter_hours(&mut self, hours: u32);
+
     fn do_work(&self);
 }
 
@@ -24,7 +26,10 @@ pub trait NonManager: Employee {
             SalaryType::Hourly => HOURLY * self.hours_worked() as f64,
         }
     }
+
     fn hours_worked(&self) -> u32;
+
     fn salary_type(&self) -> SalaryType;
+
     fn receive_payment(&mut self, pay: f64);
 }

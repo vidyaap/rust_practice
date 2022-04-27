@@ -1,5 +1,7 @@
 use crate::common::Employee;
+use crate::full_time::FullTime;
 use crate::manager::Manager;
+use crate::part_time::PartTime;
 
 mod common;
 mod full_time;
@@ -73,7 +75,7 @@ fn employee_setup_loop(mut _manager: &mut Manager) {
             let _b1 = std::io::stdin().read_line(&mut emp_type).unwrap();
             match emp_type.as_str().trim() {
                 "0" => {
-                    let ft = full_time::FullTime::new(formatted_emp);
+                    let ft = FullTime::new(formatted_emp);
                     _manager.add_employee(ft);
                     println!(
                         "OK, {} has been added as a full-time employee!",
@@ -82,7 +84,7 @@ fn employee_setup_loop(mut _manager: &mut Manager) {
                     break 'employee_type;
                 }
                 "1" => {
-                    let pt = part_time::PartTime::new(formatted_emp);
+                    let pt = PartTime::new(formatted_emp);
                     _manager.add_employee(pt);
                     println!(
                         "OK, {} has been added as a part-time employee!",
