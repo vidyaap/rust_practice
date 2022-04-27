@@ -12,29 +12,23 @@ impl Manager {
         self.employees.push(Box::new(emp));
     }
 
-    pub fn display_employees(&mut self) {
-        for _ in self.employees.iter_mut() {
-            print!("----------");
-        }
-        println!();
-        for emp in self.employees.iter_mut() {
+    pub fn display_employees(&self) {
+        println!("{}", "----------".repeat(self.employees.len()));
+        for emp in self.employees.iter() {
             print!("{:^9}|", emp.name());
         }
-        println!();
-        for _ in self.employees.iter_mut() {
-            print!("----------");
-        }
-        println!();
+        println!("\n{}", "----------".repeat(self.employees.len()));
     }
 
     pub fn enter_emp_hours(&mut self, hours_by_emp: Vec<u32>) {
         assert_eq!(hours_by_emp.len(), self.employees.len());
-        for (i, emp) in self.employees.iter_mut().enumerate() {
-            emp.enter_hours(hours_by_emp[i]);
+        let it = hours_by_emp.iter().zip(self.employees.iter_mut());
+        for (_, (hours, emp)) in it.enumerate() {
+            emp.enter_hours(*hours);
         }
     }
 
-    pub fn get_num_employees(&self) -> usize {
+    pub fn num_employees(&self) -> usize {
         self.employees.len()
     }
 

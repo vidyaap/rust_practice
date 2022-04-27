@@ -42,7 +42,7 @@ fn employee_hours(mut _manager: &mut Manager) {
             .split_whitespace()
             .map(|x| x.parse::<u32>().unwrap())
             .collect();
-        if hours_vec.len() == _manager.get_num_employees() {
+        if hours_vec.len() == _manager.num_employees() {
             _manager.enter_emp_hours(hours_vec);
             println!("Great! You successfully entered your employees' hours");
             break;
