@@ -1,5 +1,5 @@
-use crate::common::Employee;
-use crate::common::NonManager;
+use crate::employees::Employee;
+use crate::employees::NonManager;
 
 pub struct Manager {
     name: String,

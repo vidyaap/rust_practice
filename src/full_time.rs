@@ -1,6 +1,6 @@
-use crate::common::Employee;
-use crate::common::NonManager;
-use crate::common::SalaryType;
+use crate::employees::Employee;
+use crate::employees::NonManager;
+use crate::employees::SalaryType;
 
 pub struct FullTime {
     name: String,

@@ -1,9 +1,9 @@
-use crate::common::Employee;
+use crate::employees::Employee;
 use crate::full_time::FullTime;
 use crate::manager::Manager;
 use crate::part_time::PartTime;
 
-mod common;
+mod employees;
 mod full_time;
 mod manager;
 mod part_time;
