@@ -16,7 +16,7 @@ impl Employee for PartTime {
             name: String::from(name),
             hours_worked: 0,
             paid_for_period: false,
-            salary_type:SalaryType::Hourly,
+            salary_type: SalaryType::Hourly,
             total_pay: 0.0,
         }
     }
