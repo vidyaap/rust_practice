@@ -19,14 +19,14 @@ enum Action {
 }
 
 impl FromStr for Action {
-    type Err = ();
+    type Err = &'static str;
     fn from_str(input: &str) -> Result<Action, Self::Err> {
         match input {
             "AddEmployees" => Ok(Action::AddEmployees),
             "EmployeeHours" => Ok(Action::EmployeeHours),
             "PayEmployees" => Ok(Action::PayEmployees),
             "EndDay" => Ok(Action::EndDay),
-            _ => Err(()),
+            _ => Err("Invalid action type"),
         }
     }
 }
@@ -38,12 +38,12 @@ enum EmployeeType {
 }
 
 impl FromStr for EmployeeType {
-    type Err = ();
+    type Err = &'static str;
     fn from_str(input: &str) -> Result<EmployeeType, Self::Err> {
         match input {
             "Full" => Ok(EmployeeType::FullTime),
             "Part" => Ok(EmployeeType::PartTime),
-            _ => Err(()),
+            _ => Err("Invalid employee type"),
         }
     }
 }
@@ -55,7 +55,7 @@ enum LoopAction {
 }
 
 impl FromStr for LoopAction {
-    type Err = ();
+    type Err = &'static str;
     fn from_str(input: &str) -> Result<LoopAction, Self::Err> {
         match input {
             "" => Ok(LoopAction::Done),
@@ -91,24 +91,22 @@ fn add_employee_hours(manager: &mut Manager) {
 
 fn add_employees(manager: &mut Manager) {
     loop {
-        let mut emp = String::new();
         println!(
             "Enter an employee name (enter 'Done' or press Enter if you have no more employees): "
         );
-        let _b0 = std::io::stdin().read_line(&mut emp).unwrap();
-        let formatted_emp = emp.as_str().trim();
-        if formatted_emp.parse() == Ok(LoopAction::Done) {
+        let (emp, str_emp) = read_stdin();
+        if emp == Ok(LoopAction::Done) {
             break;
         }
+        let formatted_emp = str_emp.as_str().trim();
         println!(
             "Great! Is {} a full-time worker or a part-time worker?",
             formatted_emp
         );
         'employee_type: loop {
-            let mut emp_type = String::new();
             println!("Enter Full for full-time or Part for part-time: ");
-            let _b1 = std::io::stdin().read_line(&mut emp_type).unwrap();
-            match emp_type.as_str().trim().parse() {
+            let (emp_type, _) = read_stdin();
+            match emp_type {
                 Ok(EmployeeType::FullTime) => {
                     let ft = FullTime::new(formatted_emp);
                     manager.add_employee(ft);
@@ -143,9 +141,8 @@ fn choose_action(manager: &mut Manager) {
     3) Pay employees (PayEmployees)\n\
     4) Done for the day! (EndDay)"
         );
-        let mut choice = String::new();
-        let _b = std::io::stdin().read_line(&mut choice).unwrap();
-        match choice.as_str().trim().parse() {
+        let (choice, _) = read_stdin();
+        match choice {
             Ok(Action::AddEmployees) => add_employees(manager),
             Ok(Action::EmployeeHours) => add_employee_hours(manager),
             Ok(Action::PayEmployees) => manager.pay_out(),
@@ -154,6 +151,16 @@ fn choose_action(manager: &mut Manager) {
                 "That is not a valid option, please enter a valid code from the parentheses"
             ),
         }
+    }
+}
+
+fn read_stdin<T: FromStr<Err = &'static str>>() -> (Result<T, &'static str>, String) {
+    let mut line = String::new();
+    let _b = std::io::stdin().read_line(&mut line).unwrap();
+    let parsed = line.as_str().trim().parse();
+    match parsed {
+        Ok(_) => (parsed, line),
+        Err(_) => (Err("Unable to parse line from stdin"), line),
     }
 }
 
