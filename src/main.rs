@@ -75,7 +75,7 @@ fn add_employee_hours(manager: &mut Manager) {
         let hours_vec: Vec<u32> = hours
             .as_str()
             .split_whitespace()
-            .map(|x| x.parse::<u32>().unwrap())
+            .filter_map(|w| w.parse::<u32>().ok())
             .collect();
         if hours_vec.len() == manager.num_employees() {
             manager.enter_emp_hours(hours_vec);
@@ -83,8 +83,8 @@ fn add_employee_hours(manager: &mut Manager) {
             break;
         }
         println!(
-            "Sorry, looks like you didn't enter hours for as many employees as you have. \
-        Please try again!"
+            "Sorry, looks like you didn't enter hours for as many employees as you have.\n \
+        Please try again, and make sure you only enter numeric values!"
         )
     }
 }
