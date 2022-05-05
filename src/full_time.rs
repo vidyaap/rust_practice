@@ -1,7 +1,8 @@
 use crate::employees::Employee;
-use crate::employees::NonManager;
+use crate::employees::HasManager;
 use crate::employees::SalaryType;
 
+/// Struct to represent a full-time employee
 pub struct FullTime {
     name: String,
     hours_worked: u32,
@@ -34,7 +35,7 @@ impl Employee for FullTime {
     }
 }
 
-impl NonManager for FullTime {
+impl HasManager for FullTime {
     fn hours_worked(&self) -> u32 {
         self.hours_worked
     }

@@ -10,6 +10,7 @@ mod full_time;
 mod manager;
 mod part_time;
 
+/// Enum to represent the possible actions to take as a manager
 #[derive(Debug)]
 enum Action {
     AddEmployees,
@@ -22,15 +23,16 @@ impl FromStr for Action {
     type Err = &'static str;
     fn from_str(input: &str) -> Result<Action, Self::Err> {
         match input {
-            "AddEmployees" => Ok(Action::AddEmployees),
-            "EmployeeHours" => Ok(Action::EmployeeHours),
-            "PayEmployees" => Ok(Action::PayEmployees),
-            "EndDay" => Ok(Action::EndDay),
+            "1" | "add" | "AddEmployees" => Ok(Action::AddEmployees),
+            "2" | "hours" | "EmployeeHours" => Ok(Action::EmployeeHours),
+            "3" | "pay" | "PayEmployees" => Ok(Action::PayEmployees),
+            "4" | "end" | "EndDay" => Ok(Action::EndDay),
             _ => Err("Invalid action type"),
         }
     }
 }
 
+/// Enum to represent the types of employees allowed as input
 #[derive(Debug)]
 enum EmployeeType {
     FullTime,
@@ -48,6 +50,7 @@ impl FromStr for EmployeeType {
     }
 }
 
+/// Enum to represent user options in an infinite loop
 #[derive(Debug, PartialEq)]
 enum LoopAction {
     Done,
@@ -65,6 +68,9 @@ impl FromStr for LoopAction {
     }
 }
 
+/// Function to enter hours for all employees in manager's system
+///
+/// Loops until number and type of inputs are correct
 fn add_employee_hours(manager: &mut Manager) {
     println!("Here are all your employees: ");
     manager.display_employees();
@@ -89,6 +95,9 @@ fn add_employee_hours(manager: &mut Manager) {
     }
 }
 
+/// Function to add employees by name and type of employee (provided as stdin)
+///
+/// Loops until user stops (i.e. doesn't have more employees to add)
 fn add_employees(manager: &mut Manager) {
     loop {
         println!(
@@ -125,21 +134,24 @@ fn add_employees(manager: &mut Manager) {
                     );
                     break 'employee_type;
                 }
-                _ => println!("Sorry, that is not a valid employee type, try again!"),
+                Err(_) => println!("Sorry, that is not a valid employee type, try again!"),
             }
         }
     }
 }
 
+/// Function responsible for control flow of program
+///
+/// Presents activity options to user and calls appropriate functions for each action
 fn choose_action(manager: &mut Manager) {
     loop {
         println!("What would you like to do now?");
         println!(
-            "Enter the code of your choice (from the parentheses):\n\
-    1) Add more employees (AddEmployees)\n\
-    2) Enter employee hours (EmployeeHours)\n\
-    3) Pay employees (PayEmployees)\n\
-    4) Done for the day! (EndDay)"
+            "Enter the number, shorthand, or code of your choice (from the parentheses):\n\
+    1) Add more employees (add or AddEmployees)\n\
+    2) Enter employee hours (hours or EmployeeHours)\n\
+    3) Pay employees (pay or PayEmployees)\n\
+    4) Done for the day! (end or EndDay)"
         );
         let (choice, _) = read_stdin();
         match choice {
@@ -147,13 +159,14 @@ fn choose_action(manager: &mut Manager) {
             Ok(Action::EmployeeHours) => add_employee_hours(manager),
             Ok(Action::PayEmployees) => manager.pay_out(),
             Ok(Action::EndDay) => break,
-            _ => println!(
-                "That is not a valid option, please enter a valid code from the parentheses"
+            Err(_) => println!(
+                "That is not a valid option, please enter a valid number or shorthand/code from the parentheses"
             ),
         }
     }
 }
 
+/// Helper to read from stdin and parse into any type that has implemented FromStr
 fn read_stdin<T: FromStr<Err = &'static str>>() -> (Result<T, &'static str>, String) {
     let mut line = String::new();
     let _b = std::io::stdin().read_line(&mut line).unwrap();
